@@ -29,9 +29,21 @@ public class Autot extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Autot.doGet()");
+		String hakusana = request.getParameter("hakusana"); //otetaan hakusana vastaaan
+		//System.out.println(hakusana);//tulostetaan konsoliin, tarkistus
 		Dao dao = new Dao();
-		ArrayList<Auto> autot = dao.getAllItems();
-		String strJSON = new Gson().toJson(autot);
+		ArrayList<Auto> autot;
+		String strJSON="";
+		
+		if(hakusana!=null) {//Jos hakusana on olemassa 
+			if(!hakusana.equals("")) { //Jos hakusana ei ole tyhjä
+				autot = dao.getAllitems(hakusana); //haetaan kaikki hakusanan mukaiset autot
+			} else {
+				autot = dao.getAllItems(); //haetaan kaikki autot
+			}
+			strJSON = new Gson().toJson(autot);
+		}
+		
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(strJSON);
