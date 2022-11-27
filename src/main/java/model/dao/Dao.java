@@ -119,4 +119,41 @@ public class Dao {
 				return autot;
 				
 	}
+	
+	public boolean addItem(Auto auto) {
+		boolean paluuArvo = true;
+		sql = "INSERT INTO autot(rekno, merkki, malli, vuosi)VALUES(?,?,?,?)";
+		try {
+			con = yhdista();
+			stmtPrep = con.prepareStatement(sql);
+			stmtPrep.setString(1, auto.getRekno()); //huom ID:tä ei anneta
+			stmtPrep.setString(2, auto.getMerkki());
+			stmtPrep.setString(3, auto.getMalli());
+			stmtPrep.setInt(4, auto.getVuosi());
+			stmtPrep.executeUpdate();		
+		} catch (Exception e) {
+			paluuArvo=false;
+			e.printStackTrace();
+		} finally {
+			sulje();
+		}
+		return paluuArvo;
+	}
+	
+	public boolean removeItem(int id) { // Todellisuudessa tiedot ensisijaisesti merkitään poistetuiksi, DELETEä ajetaan hyvin harvoin, viite-eheys
+		boolean paluuArvo = true;
+		sql = "DELETE FROM autot WHERE id=?";
+		try {
+			con = yhdista();
+			stmtPrep = con.prepareStatement(sql);
+			stmtPrep.setInt(1, id);
+			stmtPrep.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+			paluuArvo = false;
+		} finally {
+			sulje();
+		}
+		return paluuArvo;
+	}
 }
